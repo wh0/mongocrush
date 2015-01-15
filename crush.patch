@@ -1,0 +1,34 @@
+--- run-mongo.js.orig	2015-01-15 07:11:16.268106967 +0000
++++ run-mongo.js	2015-01-15 20:09:58.765658095 +0000
+@@ -173,6 +173,8 @@
+   var noOplog = false;
+   var mongod_path = path.join(
+     files.getDevBundle(), 'mongodb', 'bin', 'mongod');
++  var libnfslie_path = path.join(
++    files.getDevBundle(), 'lib', 'libnfslie.so');
+   var replSetName = 'meteor';
+ 
+   // Automated testing: If this is set, instead of starting mongod, we
+@@ -293,11 +295,18 @@
+       '--nohttpinterface',
+       '--port', port,
+       '--dbpath', dbPath,
+-      // Use an 8MB oplog rather than 256MB. Uses less space on disk and
++      // Use an 1MB oplog rather than 256MB. Uses less space on disk and
+       // initializes faster. (Not recommended for production!)
+-      '--oplogSize', '8',
+-      '--replSet', replSetName
+-    ]);
++      '--oplogSize', '1',
++      '--replSet', replSetName,
++      '--nssize', '1',
++      '--nojournal',
++      '--noprealloc'
++    ], {
++      env: {
++        'LD_PRELOAD': libnfslie_path
++      }
++    });
+     subHandles.push({
+       stop: function () {
+         if (proc) {
