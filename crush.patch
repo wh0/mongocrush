@@ -1,15 +1,15 @@
---- run-mongo.js.orig	2015-01-15 07:11:16.268106967 +0000
-+++ run-mongo.js	2015-01-15 20:09:58.765658095 +0000
-@@ -173,6 +173,8 @@
+--- run-mongo.js.orig	2015-01-22 19:53:08.060403999 +0000
++++ run-mongo.js	2015-01-22 19:54:07.900403999 +0000
+@@ -170,6 +170,8 @@
    var noOplog = false;
-   var mongod_path = path.join(
+   var mongod_path = files.pathJoin(
      files.getDevBundle(), 'mongodb', 'bin', 'mongod');
-+  var libnfslie_path = path.join(
++  var libnfslie_path = files.pathJoin(
 +    files.getDevBundle(), 'lib', 'libnfslie.so');
    var replSetName = 'meteor';
  
    // Automated testing: If this is set, instead of starting mongod, we
-@@ -293,11 +295,18 @@
+@@ -291,11 +293,18 @@
        '--nohttpinterface',
        '--port', port,
        '--dbpath', dbPath,
