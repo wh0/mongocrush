@@ -16,8 +16,13 @@ install: run-mongo.js libnfslie.so
 	cp run-mongo.js $(METEOR_TOOL_DIR)/tools
 	cp libnfslie.so $(METEOR_TOOL_DIR)/dev_bundle/lib
 
+uninstall:
+	test -e run-mongo.js.orig
+	cp run-mongo.js.orig $(METEOR_TOOL_DIR)/tools/run-mongo.js
+	rm -f $(METEOR_TOOL_DIR)/dev_bundle/lib/libnfslie.so
+
 diff: run-mongo.js | run-mongo.js.orig
 	diff -u $| $< > crush.patch || true
 	touch $<
 
-.PHONY: all install diff
+.PHONY: all install uninstall diff
