@@ -20,8 +20,7 @@ guest1212:~/Workspaces/mongocrush (master) $ du -sh blank/.meteor/local/db/
 
 ```
 guest1212:~/Workspaces/mongocrush (master) $ make install
-cp $HOME/.meteor/packages/meteor-tool/1.0.40/meteor-tool-os.linux.x86_64/tools/run-mongo.js run-mongo.js
-.orig
+cp $HOME/.meteor/packages/meteor-tool/1.0.40/meteor-tool-os.linux.x86_64/tools/run-mongo.js run-mongo.js.orig
 cp run-mongo.js.orig run-mongo.js
 patch run-mongo.js < crush.patch
 patching file run-mongo.js
