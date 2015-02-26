@@ -1,4 +1,4 @@
-METEOR_TOOL_DIR := $$HOME/.meteor/packages/meteor-tool/1.0.40/meteor-tool-os.linux.x86_64
+METEOR_TOOL_DIR := $$HOME/.meteor/packages/meteor-tool/1.0.41/meteor-tool-os.linux.x86_64
 
 all: libnfslie.so run-mongo.js
 
