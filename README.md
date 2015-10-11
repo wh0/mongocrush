@@ -1,42 +1,30 @@
-```
-guest1212:~/Workspaces/mongocrush (master) $ meteor create blank
-blank: created.
+# Force sparse MongoDB data files.
 
-To run your new app:
-  cd blank
-  meteor
-guest1212:~/Workspaces/mongocrush (master) $ (cd blank && meteor)
-[[[[[ ~/Workspaces/mongocrush/blank ]]]]]
+And reduce the size of namespace files.
 
-=> Started proxy.
-=> Started MongoDB.
-=> Started your app.
+---
 
-=> App running at: http://localhost:3000/
-^C
-guest1212:~/Workspaces/mongocrush (master) $ du -sh blank/.meteor/local/db/
-449M    blank/.meteor/local/db/
-```
+## Instructions
 
-```
-guest1212:~/Workspaces/mongocrush (master) $ make install
-cp $HOME/.meteor/packages/meteor-tool/1.0.40/meteor-tool-os.linux.x86_64/tools/run-mongo.js run-mongo.js.orig
-cp run-mongo.js.orig run-mongo.js
-patch run-mongo.js < crush.patch
-patching file run-mongo.js
-cc -g -shared -fPIC -o libnfslie.so nfslie.c -ldl
-cp run-mongo.js $HOME/.meteor/packages/meteor-tool/1.0.40/meteor-tool-os.linux.x86_64/tools
-cp libnfslie.so $HOME/.meteor/packages/meteor-tool/1.0.40/meteor-tool-os.linux.x86_64/dev_bundle/lib
-guest1212:~/Workspaces/mongocrush (master) $ (cd blank && meteor reset && meteor)
-Project reset.
-[[[[[ ~/Workspaces/mongocrush/blank ]]]]]
+Run `make install`.
+This patches a version of the Meteor tool so that it runs the MongoDB server differently.
+Check what version it patches in the **Makefile**.
+You can use `make uninstall` to go back to stock.
 
-=> Started proxy.
-=> Started MongoDB.
-=> Started your app.
+### Force sparse data files
+MongoDB doesn't preallocate its data files [when it runs on NFS](https://github.com/mongodb/mongo/blob/r2.6.7/src/mongo/util/file_allocator.cpp#L153).
+We simulate this condition with a shim over the `fstatfs64` function, implemented in **nfslie.c**.
+This probably leads to instability if you later run out of disk space that MongoDB thinks you should have.
 
-=> App running at: http://localhost:3000/
-^C
-guest1212:~/Workspaces/mongocrush (master) $ du -sh blank/.meteor/local/db/
-1.1M    blank/.meteor/local/db/
-```
+### Reduce the size of namespace files
+> Each collection and index counts as a namespace. ...
+> The default value of 16 megabytes provides for approximately 24,000 namespaces.
+
+We reduce it to 1 MB.
+Now you can only have like 1,500 namespaces.
+You're really gonna have to tighten your belt to build an app under that constraint.
+
+### Disable journaling
+**Note: I haven't seen this in the latest version of stock, so I didn't include it in the patch this time.**
+Journal files take like 384 MB right off the bat, in a blank app.
+Only you can rationalize forgoing this durability.
