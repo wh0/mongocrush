@@ -1,4 +1,4 @@
-METEOR_TOOL_DIR := $$HOME/.meteor/packages/meteor-tool/1.0.41/meteor-tool-os.linux.x86_64
+METEOR_TOOL_DIR := $$HOME/.meteor/packages/meteor-tool/1.1.9/mt-os.linux.x86_64
 
 all: libnfslie.so run-mongo.js
 
@@ -10,15 +10,15 @@ run-mongo.js: crush.patch | run-mongo.js.orig
 	patch $@ < $<
 
 run-mongo.js.orig:
-	cp $(METEOR_TOOL_DIR)/tools/run-mongo.js $@
+	cp $(METEOR_TOOL_DIR)/tools/runners/run-mongo.js $@
 
 install: run-mongo.js libnfslie.so
-	cp run-mongo.js $(METEOR_TOOL_DIR)/tools
+	cp run-mongo.js $(METEOR_TOOL_DIR)/tools/runners
 	cp libnfslie.so $(METEOR_TOOL_DIR)/dev_bundle/lib
 
 uninstall:
 	test -e run-mongo.js.orig
-	cp run-mongo.js.orig $(METEOR_TOOL_DIR)/tools/run-mongo.js
+	cp run-mongo.js.orig $(METEOR_TOOL_DIR)/tools/runners/run-mongo.js
 	rm -f $(METEOR_TOOL_DIR)/dev_bundle/lib/libnfslie.so
 
 diff: run-mongo.js | run-mongo.js.orig
